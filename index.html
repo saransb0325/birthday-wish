@@ -990,7 +990,7 @@
           <img class="album" src="album.jpeg" alt="Album artwork" id="albumArt" />
           <div class="song-info">
             <h3>This One Feels Like Us</h3>
-            <p style="color: var(--muted)">Synthesized Lofi Friendship Melody 🎧</p>
+            <p style="color: var(--muted)">Our Song 🎧</p>
             <div class="progress" id="progressBar" onclick="seekAudio(event)">
               <i id="bar"></i>
             </div>
@@ -998,6 +998,7 @@
               <button class="circle" id="playBtn">▶</button>
               <span id="time">00:00</span>
             </div>
+            <audio id="bgSong" src="song.mp3" preload="metadata"></audio>
           </div>
         </div>
       </section>
@@ -1398,46 +1399,56 @@
         document.getElementById("lightbox").classList.remove("show");
       }
 
-      /* ===== SYNTHESIZED LOFI MUSIC PLAYER ===== */
+      /* ===== SONG PLAYER (real audio file) ===== */
       let isPlaying = false;
-      let synthProgress = 0;
-      let synthInterval;
 
       const playBtn = document.getElementById("playBtn");
       const bar = document.getElementById("bar");
       const timeDisplay = document.getElementById("time");
+      const song = document.getElementById("bgSong");
+
+      function formatTime(t) {
+        if (isNaN(t)) return "00:00";
+        const m = Math.floor(t / 60);
+        const s = Math.floor(t % 60);
+        return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+      }
 
       playBtn.onclick = () => {
         isPlaying = !isPlaying;
         playBtn.textContent = isPlaying ? "❚❚" : "▶";
 
-        clearInterval(synthInterval);
         if (isPlaying) {
-          audioFx.init();
-          synthInterval = setInterval(() => {
-            synthProgress = synthProgress >= 100 ? 0 : synthProgress + 0.4;
-            bar.style.width = synthProgress + "%";
-            
-            const totalSecs = Math.floor(synthProgress * 1.5);
-            const m = Math.floor(totalSecs / 60);
-            const s = totalSecs % 60;
-            timeDisplay.textContent = String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
-
-            // Play pleasant chord tones periodically
-            if (Math.random() < 0.2) {
-              const chord = [392, 440, 523.25, 659.25];
-              const note = chord[Math.floor(Math.random() * chord.length)];
-              audioFx.playTone(note, 'sine', 0.4, 0.04);
-            }
-          }, 100);
+          song.play().catch(() => {
+            // Autoplay/file issue fallback
+            isPlaying = false;
+            playBtn.textContent = "▶";
+          });
+        } else {
+          song.pause();
         }
       };
+
+      song.addEventListener("timeupdate", () => {
+        const pct = (song.currentTime / song.duration) * 100 || 0;
+        bar.style.width = pct + "%";
+        timeDisplay.textContent = formatTime(song.currentTime);
+      });
+
+      song.addEventListener("ended", () => {
+        isPlaying = false;
+        playBtn.textContent = "▶";
+        bar.style.width = "0%";
+        timeDisplay.textContent = "00:00";
+      });
 
       function seekAudio(e) {
         const rect = document.getElementById("progressBar").getBoundingClientRect();
         const clickX = e.clientX - rect.left;
-        synthProgress = (clickX / rect.width) * 100;
-        bar.style.width = synthProgress + "%";
+        const pct = clickX / rect.width;
+        if (!isNaN(song.duration)) {
+          song.currentTime = pct * song.duration;
+        }
       }
 
       /* ===== TYPEWRITER EFFECT ===== */

@@ -917,16 +917,9 @@
           </div>
           <h1>Priceless as a<br />Bestfriend 🌙</h1>
           <p>
-            Hey Panda 🐼... I built this cozy space in our galaxy because a friendship like ours deserves more than just a quick text wish.
+            Hey Dharshu 🐼...“Life changes, people change, but I hope our friendship never does. ❤️
+Happy Birthday, my best friend! 🫂🎂” .
           </p>
-
-          <!-- Friendship Counter Widget -->
-          <div class="friendship-timer" id="friendshipTimer">
-            <div class="timer-unit"><b id="daysCount">1240</b><span>Days</span></div>
-            <div class="timer-unit"><b id="hoursCount">18</b><span>Hours</span></div>
-            <div class="timer-unit"><b id="minsCount">45</b><span>Mins</span></div>
-            <div class="timer-unit"><b id="secsCount">30</b><span>Secs</span></div>
-          </div>
 
           <br />
           <button
@@ -1369,24 +1362,7 @@
         setTimeout(() => s.remove(), 700);
       });
 
-      /* ===== FRIENDSHIP COUNTER ===== */
-      const startDate = new Date("2023-03-20T00:00:00");
-      function updateTimer() {
-        const now = new Date();
-        const diff = now - startDate;
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const mins = Math.floor((diff / (1000 * 60)) % 60);
-        const secs = Math.floor((diff / 1000) % 60);
-
-        document.getElementById("daysCount").textContent = days;
-        document.getElementById("hoursCount").textContent = hours;
-        document.getElementById("minsCount").textContent = mins;
-        document.getElementById("secsCount").textContent = secs;
-      }
-      setInterval(updateTimer, 1000);
-      updateTimer();
-
+   
       /* ===== LIGHTBOX ===== */
       document.addEventListener("click", (e) => {
         if (e.target.tagName === 'IMG' && e.target.closest('.polaroid')) {
